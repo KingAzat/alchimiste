@@ -1,0 +1,12 @@
+# Objets et binaire
+build/
+*.o
+alchimiste-shell
+
+# Binaires de test
+tests/test_parser
+
+# Divers
+*~
+.alchimiste_history
+__pycache__/

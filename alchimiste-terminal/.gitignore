@@ -1,0 +1,6 @@
+# Artefacts de compilation
+*.o
+alchimiste-terminal
+
+# Divers
+*~

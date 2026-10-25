@@ -1,0 +1,266 @@
+bash tests/run_all.sh
+=== Compilation (make) ===
+OK
+
+=== Tests unitaires : lexer / parser / expansion ===
+alchimiste-shell: erreur de syntaxe : guillemet double non fermé
+alchimiste-shell: erreur de syntaxe : guillemet simple non fermé
+alchimiste-shell: erreur de syntaxe : antislash en fin de ligne
+alchimiste-shell: erreur de syntaxe près du symbole inattendu « | »
+alchimiste-shell: erreur de syntaxe : fin de ligne inattendue
+alchimiste-shell: erreur de syntaxe : fin de ligne inattendue
+alchimiste-shell: erreur de syntaxe près du symbole inattendu « ; »
+alchimiste-shell: erreur de syntaxe près du symbole inattendu « && »
+alchimiste-shell: erreur de syntaxe près du symbole inattendu « & »
+alchimiste-shell: erreur de syntaxe près du symbole inattendu « || »
+alchimiste-shell: erreur de syntaxe près du symbole inattendu « ; »
+PASS : lexer : ligne vide -> seul EOF
+PASS : lexer : ligne blanche -> seul EOF
+PASS : lexer : mot seul
+PASS : lexer : espaces multiples
+PASS : lexer : guillemets doubles (mot unique, brut)
+PASS : lexer : guillemets simples
+PASS : lexer : antislash protégeant une espace
+PASS : lexer : argument contenant une espace
+PASS : lexer : tous les opérateurs ; | && || & > >> <
+PASS : lexer : nombre de descripteur 2>
+PASS : lexer : 2>&1
+PASS : lexer : >&2 (sortie vers erreurs)
+PASS : lexer : &> fichier
+PASS : lexer : &>> fichier
+PASS : lexer : espace entre 2 et > -> mot ordinaire
+PASS : lexer : 2>x collé -> nombre de descripteur
+PASS : lexer : x2>y -> mot x2 puis redirection
+PASS : lexer : guillemet double non fermé -> erreur
+PASS : lexer : guillemet simple non fermé -> erreur
+PASS : lexer : antislash en fin de ligne -> erreur
+PASS : lexer : commentaire # en fin de ligne
+PASS : lexer : ligne entièrement commentée
+PASS : lexer : # à l'intérieur d'un mot
+PASS : parser : commande simple avec arguments
+PASS : parser : pipeline de 3 commandes
+PASS : parser : séquence ;
+PASS : parser : chaîne && puis ||
+PASS : parser : arrière-plan &
+PASS : parser : trois commandes séparées par ;
+PASS : parser : redirection >
+PASS : parser : redirection >>
+PASS : parser : redirection d'entrée <
+PASS : parser : 2> et 2>>
+PASS : parser : 2>&1 puis > (ordre conservé)
+PASS : parser : >&2
+PASS : parser : &>
+PASS : parser : &>>
+PASS : parser : redirection avant les mots
+PASS : parser : | en début de ligne -> erreur
+PASS : parser : | en fin de ligne -> erreur
+PASS : parser : > sans fichier -> erreur
+PASS : parser : ; ; -> erreur
+PASS : parser : && en début de ligne -> erreur
+PASS : parser : & seul -> erreur
+PASS : parser : && suivi de || -> erreur
+PASS : parser : ; après un tube -> erreur
+PASS : parser : ligne vide, sans erreur
+PASS : parser : ligne blanche, sans erreur
+PASS : parser : commentaire seul, sans erreur
+PASS : expansion : $FOO
+PASS : expansion : ${FOO} accolades
+PASS : expansion : guillemets simples = littéral
+PASS : expansion : guillemets doubles = expansion
+PASS : expansion : variables consécutives
+PASS : expansion : variable inconnue -> 0 champ
+PASS : expansion : variable inconnue quotée -> 1 champ vide
+PASS : expansion : concaténation avec variable vide
+PASS : expansion : $?
+PASS : expansion : antislash espace
+PASS : expansion : guillemets internes échappés
+PASS : expansion : tilde seul
+PASS : expansion : tilde avec chemin
+PASS : expansion : tilde protégé = littéral
+PASS : expansion : tilde hors tête de mot = littéral
+PASS : expansion : joker * trié
+PASS : expansion : joker sans correspondance = littéral
+PASS : expansion : joker protégé = littéral
+PASS : expansion : joker ?
+PASS : expansion : jokers issus d'une variable
+PASS : affectation : FOO=bar
+PASS : affectation : X= (valeur vide)
+PASS : affectation : _X2=y
+PASS : affectation : quotée = non
+PASS : affectation : chiffre en tête = non
+PASS : affectation : sans = non
+PASS : affectation : a=b=c (valeur b=c)
+PASS : variables : var_set/var_get
+PASS : variables : locale non exportée invisible dans environ
+PASS : variables : export rend visible dans environ
+PASS : variables : l'export est conservé aux modifications
+PASS : variables : unset supprime partout
+PASS : variables : nom valide
+PASS : variables : nom invalide
+PASS : variables : nom invalide (tiret)
+PASS : alias : définition/lecture
+PASS : alias : suppression
+
+86 tests réussis, 0 échoués
+
+=== Tests fonctionnels : commandes ===
+--- Commandes simples et arguments ---
+PASS : T01 commande simple
+PASS : T02 commande avec arguments
+PASS : T03 espaces multiples
+PASS : T04 guillemets doubles
+PASS : T05 guillemets simples
+PASS : T06 échappement d'espace
+PASS : T07 guillemets internes
+PASS : T08 argument avec espace (fichier)
+PASS : T09 champ vide non quoté disparaît
+PASS : T09b champ vide quoté conservé
+--- Commande interne cd ---
+PASS : T10 cd + pwd
+PASS : T11 cd sans argument (HOME)
+PASS : T12 cd inexistant
+PASS : T13 cd message d'erreur
+PASS : T14 cd - retour
+--- Commande inconnue ---
+PASS : T15 commande inconnue : statut 127
+PASS : T16 commande inconnue : message
+--- Variables d'environnement ---
+PASS : T17 $HOME
+PASS : T18 ${HOME} accolades
+PASS : T19 guillemets simples : littéral
+PASS : T20 affectation et lecture
+PASS : T21 unset
+PASS : T22 export + env
+PASS : T23 $? après true
+PASS : T24 $? après false
+PASS : T25 $? après commande inconnue
+PASS : T26 $$ numérique
+--- Séquences et opérateurs conditionnels ---
+PASS : T27 séquence ;
+PASS : T28 && si succès
+PASS : T29 && si échec
+PASS : T30 || si échec
+PASS : T31 || si succès
+PASS : T32 cd || message
+PASS : T33 chaîne mixte
+PASS : T34 mkdir ; cd ; pwd
+--- Arrière-plan et jobs ---
+PASS : T35 & puis jobs (En cours)
+PASS : T36 tâche terminée (Terminée)
+--- Tilde et jokers ---
+PASS : T37 tilde
+PASS : T38 tilde + chemin
+PASS : T39 tilde protégé
+PASS : T40 joker *
+PASS : T41 joker ?
+PASS : T42 joker sans correspondance
+PASS : T43 joker protégé
+--- type / alias / umask / history ---
+PASS : T44 type interne
+PASS : T45 type externe
+PASS : T46 type inconnu
+PASS : T47 alias
+PASS : T48 alias + arguments
+PASS : T49 unalias puis usage
+PASS : T50 umask
+PASS : T51 history
+PASS : T52 history -c
+--- Divers ---
+PASS : T53 help
+PASS : T54 commentaires
+PASS : T55 ligne vide
+PASS : T56 exit 5
+PASS : T57 exit sans argument
+--- Scripts et source ---
+PASS : T58 script multi-commandes
+PASS : T59 code de sortie du script
+PASS : T60 source persiste variables+répertoire
+PASS : T61 point . équivalent
+--- Erreurs de syntaxe ---
+PASS : T62 | en début de ligne
+PASS : T63 guillemet non fermé
+PASS : T64 ; ; 
+PASS : T65 > sans fichier
+PASS : T66 message d'erreur de syntaxe
+--- Erreurs d'exécution ---
+PASS : T67 cat fichier inexistant
+PASS : T68 message du programme externe
+PASS : T69 trop d'arguments
+PASS : T70 message trop d'arguments
+
+Résultat : 71 réussis, 0 échoués
+
+=== Tests fonctionnels : tubes ===
+--- Tubes simples ---
+PASS : P01 tube simple
+PASS : P02 guillemets + tube
+PASS : P03 interne dans tube
+PASS : P04 echo -n dans tube
+PASS : P05 echo dans tube
+--- Chaînes de tubes ---
+PASS : P06 trois commandes
+PASS : P07 quatre commandes
+PASS : P08 grep + wc
+--- Statut d'un pipeline (dernière commande) ---
+PASS : P09 true | false
+PASS : P10 false | true
+PASS : P11 inconnu | cat (statut = dernière commande)
+--- Tube + redirection combinés ---
+PASS : P12 tube vers fichier
+PASS : P13 fichier vers tube
+
+Résultat : 13 réussis, 0 échoués
+
+=== Tests fonctionnels : redirections ===
+--- Sortie standard ---
+PASS : R01 > écrasement
+PASS : R02 > écrase l'existant
+PASS : R03 >> ajout
+PASS : R04 interne vers fichier
+PASS : R05 > fichier avec espaces
+--- Entrée standard ---
+PASS : R06 < lecture
+PASS : R07 < fichier inexistant
+PASS : R08 message d'erreur du shell
+--- Erreurs (stderr) ---
+PASS : R09 2> capture les erreurs
+PASS : R10 contenu du fichier d'erreurs
+PASS : R11 2>> ajout des erreurs
+PASS : R12 2>&1 vers le fichier
+PASS : R13 2>&1 avant > : erreur sur stdout, fichier vide
+PASS : R14 &> sortie + erreurs
+PASS : R15 &> sortie normale
+PASS : R16 &>> ajout
+--- Cas particuliers ---
+PASS : R17 redirection seule (crée le fichier)
+PASS : R18 redirection avant la commande
+PASS : R19 redirection ambiguë (joker)
+PASS : R20 message redirection ambiguë
+PASS : R21 umask appliqué aux fichiers créés
+PASS : R22 interne avec redirection
+
+Résultat : 22 réussis, 0 échoués
+
+=== Tests interactifs (pseudo-terminal) ===
+PASS : bannière affichée
+PASS : invite utilisateur@hôte
+PASS : commande simple
+PASS : Ctrl+C interrompt sleep (le shell survit)
+PASS : code de retour 130 après SIGINT
+PASS : shell fonctionnel après Ctrl+C
+PASS : Ctrl+Z suspend la commande (retour à l'invite)
+PASS : jobs affiche la tâche arrêtée
+PASS : bg relance en arrière-plan
+PASS : jobs affiche la tâche en cours
+PASS : fg réaffiche la commande
+PASS : fg attend la fin de la tâche
+PASS : notification [N] PID
+PASS : jobs suit l'arrière-plan
+PASS : notification « Terminée » avant l'invite
+PASS : message d'au revoir
+
+17/17 tests interactifs réussis
+
+======================================
+  TOUS LES TESTS ONT RÉUSSI
+======================================
